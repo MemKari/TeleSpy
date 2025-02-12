@@ -5,11 +5,13 @@ from telethon import TelegramClient, events
 from telethon.errors import PhoneNumberInvalidError, SessionPasswordNeededError
 from telethon.tl.types import Channel, Chat
 
+from config import api_id, api_hash, phone
+from models import models
+from search_settings import result_channel_ID, set_chats, keywords
+
 logging.basicConfig(format='[%(levelname) %(asctime)s] %(name)s: %(message)s',
                     level=logging.WARNING)
 
-from config import api_id, api_hash, phone
-from search_settings import result_channel_ID, set_chats, keywords
 
 
 async def create_tg_client():
@@ -35,6 +37,7 @@ async def send_tg_notification(client, text='New keyword mention'):
 
 async def main():
     client = await create_tg_client()
+    db = await models.create_db_and_tables()
 
     print('Got client')
     monitored_chats_id = await set_chats(client)

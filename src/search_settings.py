@@ -29,7 +29,7 @@ async def set_chats(client) -> list:
 
     id_list = []
     for number_chat in keys_list:
-        find_id = dict_for_chat[number_chat].id
+        find_id = dict_for_chat[number_chat].chat_id
         id_list.append(find_id)
     print(id_list)
 
