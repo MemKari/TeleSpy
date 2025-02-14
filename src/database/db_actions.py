@@ -1,10 +1,11 @@
 from sqlalchemy import select
+from sqlalchemy.future import select as future_select
 from telethon.errors import RPCError
 
 from src.database.models import get_async_session, Chats
 
 
-async def add_chat_to_db(tg_chats: list, client):
+async def add_chat_to_db(tg_chats: list, client) -> None:
     async with get_async_session() as session:
         async with session.begin():
             for chat in tg_chats:
@@ -24,3 +25,10 @@ async def add_chat_to_db(tg_chats: list, client):
                     continue
 
                 session.add(new_entry)
+
+
+async def get_tracked_chats() -> list:
+    async with get_async_session() as session:
+        chat_list = await session.execute(future_select(Chats.chat_name))
+        return chat_list.scalars().all()
+

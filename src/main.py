@@ -51,7 +51,9 @@ async def main():
                 await client.send_message('me', f'{chat.title}: {event.message.message}')
                 print(f'{chat.title}: {event.message.message}')
 
-    print("The bot is running and listening to messages...")
+    print("The bot is running and listening to messages in chats:")
+    print(await db_actions.get_tracked_chats())
+
     await client.run_until_disconnected()
 
 
