@@ -32,3 +32,17 @@ async def get_tracked_chats() -> list:
         chat_list = await session.execute(future_select(Chats.chat_name))
         return chat_list.scalars().all()
 
+
+async def script_handler():
+    def choose_action() -> str:
+        user_answer = input('''Please select one option and enter its number:
+              1. I want to start tracking new chats.
+              2. I want to see a list of all the chats I'm monitoring.
+              3. I want to remove the chat from the monitored list.'''.strip())
+        return user_answer
+
+    try:
+        action_number = int(choose_action())
+    except ValueError:
+        print('Enter a single digit that corresponds to the option you need. Do not enter any additional characters.')
+        action_number = choose_action()

@@ -24,12 +24,15 @@ async def set_chats(client) -> list:
     print(Back.CYAN + 'Your chats are listed here.' + Style.RESET_ALL)
 
     keys_list = list(map(int, input(Back.CYAN + 'Enter the chat numbers separated by a space -'+ Style.RESET_ALL).split()))
-    print('Chats are being monitored', keys_list, '\n')
 
     id_list = []
     for number_chat in keys_list:
-        find_id = dict_for_chat[number_chat].id
-        id_list.append(find_id)
-    print(id_list)
+        try:
+            find_id = dict_for_chat[number_chat].id
+            id_list.append(find_id)
+        except KeyError:
+            print(f'It seems that you entered the wrong channel number: {number_chat}. '
+                  'Please check the channel numbers carefully and re-enter them.')
+            continue
 
     return id_list

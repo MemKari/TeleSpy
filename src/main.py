@@ -35,7 +35,6 @@ async def create_tg_client():
 async def send_tg_notification(client, text='New keyword mention'):
     await client.send_message(result_channel_ID, text)
 
-
 async def main():
     client = await create_tg_client()
     await models.create_db_and_tables()
