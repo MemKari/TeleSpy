@@ -1,6 +1,8 @@
 import asyncio
 import logging
 
+import colorama
+from colorama import Back, Style
 from telethon import TelegramClient, events
 from telethon.errors import PhoneNumberInvalidError, SessionPasswordNeededError
 from telethon.tl.types import Channel, Chat
@@ -19,12 +21,12 @@ async def create_tg_client():
         await client.connect()
         if not await client.is_user_authorized():
             await client.send_code_request(phone)
-            code = input('Enter the code you received: ')
+            code = input(Back.MAGENTA + 'Enter the code you received: ' + Style.RESET_ALL)
             await client.sign_in(phone, code)
     except PhoneNumberInvalidError:
         logging.info('Invalid phone number.')
     except SessionPasswordNeededError:
-        password = input('Enter your 2FA password: ')
+        password = input(Back.MAGENTA + 'Enter your 2FA password: ' + Style.RESET_ALL)
         await client.sign_in(password=password)
 
     return client
@@ -51,7 +53,8 @@ async def main():
                 await client.send_message('me', f'{chat.title}: {event.message.message}')
                 print(f'{chat.title}: {event.message.message}')
 
-    print("The bot is running and listening to messages in chats:")
+    colorama.init()
+    print(Back.YELLOW + "The bot is running and listening to messages in chats:" + Style.RESET_ALL)
     print(await db_actions.get_tracked_chats())
 
     await client.run_until_disconnected()

@@ -1,3 +1,5 @@
+from colorama import Back, Style
+from colorama import init as colorama_init
 from telethon.tl.types import Channel, Chat
 
 keywords = ('кинолог', 'собака', 'зоопсихолог')
@@ -5,7 +7,8 @@ result_channel_ID = -1001624784833  # TODO
 
 
 async def set_chats(client) -> list:
-    print('Set of chats starting...')
+    colorama_init()
+    print(Back.CYAN + 'Set of chats starting...' + Style.RESET_ALL)
     dict_for_chat = {}
     counter = 1
     async for dialog in client.iter_dialogs():
@@ -16,12 +19,12 @@ async def set_chats(client) -> list:
     for k, dialog in dict_for_chat.items():
         if isinstance(dialog, Channel) or isinstance(dialog, Chat):
             dict_for_print[k] = dialog.title
-    print('dict for print chats', dict_for_print)
+    print(f'{dict_for_print}')
 
-    print('Your chats are listed here.')
+    print(Back.CYAN + 'Your chats are listed here.' + Style.RESET_ALL)
 
-    keys_list = list(map(int, input('Enter the chat numbers separated by a space -').split()))
-    print('Chats are being monitored', keys_list, '\n', 'Waiting for messages')
+    keys_list = list(map(int, input(Back.CYAN + 'Enter the chat numbers separated by a space -'+ Style.RESET_ALL).split()))
+    print('Chats are being monitored', keys_list, '\n')
 
     id_list = []
     for number_chat in keys_list:

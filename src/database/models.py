@@ -3,6 +3,7 @@ from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import BigInteger
 
 from src.config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 
@@ -16,7 +17,7 @@ class Base(DeclarativeBase):
 class Chats(Base):
     __tablename__ = 'chats_info'
 
-    chat_id: Mapped[int] = mapped_column(primary_key=True)
+    chat_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     chat_name: Mapped[str] = mapped_column(nullable=False)
 
     def __repr__(self) -> str:
