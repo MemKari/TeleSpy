@@ -3,7 +3,7 @@ from colorama import init as colorama_init
 from telethon.tl.types import Channel, Chat
 
 keywords = ('кинолог', 'собака', 'зоопсихолог')
-result_channel_ID = -1001624784833  # TODO
+result_channel_ID = -1001624784833  # TODO 2444797511
 
 
 async def set_chats(client) -> list:

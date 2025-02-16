@@ -9,7 +9,7 @@ from telethon.tl.types import Channel, Chat
 
 from config import api_id, api_hash, phone
 from database import models, db_actions
-from search_settings import result_channel_ID, set_chats, keywords
+from search_settings import result_channel_ID, keywords
 
 logging.basicConfig(format='[%(levelname) %(asctime)s] %(name)s: %(message)s',
                     level=logging.WARNING)
@@ -32,25 +32,28 @@ async def create_tg_client():
     return client
 
 
-async def send_tg_notification(client, text='New keyword mention'):
-    await client.send_message(result_channel_ID, text)
+async def send_tg_notification(client, chat_title, message):
+    await client.send_message(result_channel_ID, f'New keyword mention: \n {chat_title}{message}')
+
 
 async def main():
     client = await create_tg_client()
     await models.create_db_and_tables()
 
-    print('Got client')
-    monitored_chats_id = await set_chats(client)
-    await db_actions.add_chat_to_db(monitored_chats_id, client)
+    change_settings = (input(
+        "You can change your chat settings right now. If you don't need it, press Enter.\n"
+        "If you Want to Enter to the control menu? Enter 1.").strip())
+    if change_settings != '' and int(change_settings) == 1:
+        await db_actions.script_handler(client)
+
+    monitored_chats_id = await db_actions.get_id_tracked_chats()
 
     @client.on(events.NewMessage(chats=monitored_chats_id, incoming=True))
     async def f(event):
         if any(word in event.message.message for word in keywords):
             chat = await event.get_chat()
             if isinstance(chat, Channel) or isinstance(chat, Chat):
-                await send_tg_notification(client)
-                await client.send_message('me', f'{chat.title}: {event.message.message}')
-                print(f'{chat.title}: {event.message.message}')
+                await send_tg_notification(client, chat.title, event.message.message)
 
     colorama.init()
     print(Back.YELLOW + "The bot is running and listening to messages in chats:" + Style.RESET_ALL)
