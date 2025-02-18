@@ -31,7 +31,7 @@ async def add_chat_to_db(tg_chats: list, client) -> None:
 async def delete_chats():
     async with get_async_session() as session:
         tracked_chats = await get_tracked_chats()
-        print(tracked_chats)
+        print(', '.join(tracked_chats))
         chat_names_to_delete = input(
             "Copy the names of the chats you want to delete and paste them separated by commas(,): ").split(',')
         chat_names_to_delete = [name.strip() for name in chat_names_to_delete if name.strip()]
@@ -79,7 +79,6 @@ async def script_handler(client) -> False or None:
         print('Enter a single digit that corresponds to the option you need. Do not enter any additional characters.')
         action_number = choose_action()
 
-    print(f'Okay, you choose option number {action_number}', type(action_number))
     if action_number == 1:
         monitored_chats_id = await set_chats(client)
         await add_chat_to_db(monitored_chats_id, client)

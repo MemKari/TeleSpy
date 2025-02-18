@@ -3,7 +3,7 @@ from colorama import init as colorama_init
 from telethon.tl.types import Channel, Chat
 
 keywords = ('кинолог', 'собака', 'зоопсихолог')
-result_channel_ID = -1001624784833  # TODO 2444797511
+result_channel_ID = -1002444797511
 
 
 async def set_chats(client) -> list:
@@ -12,6 +12,7 @@ async def set_chats(client) -> list:
     dict_for_chat = {}
     counter = 1
     async for dialog in client.iter_dialogs():
+        print(dialog.title)
         dict_for_chat[counter] = dialog.entity
         counter += 1
 
@@ -34,5 +35,5 @@ async def set_chats(client) -> list:
             print(f'It seems that you entered the wrong channel number: {number_chat}. '
                   'Please check the channel numbers carefully and re-enter them.')
             continue
-
+    print(f'id_list {id_list}')
     return id_list

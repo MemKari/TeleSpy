@@ -42,7 +42,7 @@ async def main():
 
     change_settings = (input(
         "You can change your chat settings right now. If you don't need it, press Enter.\n"
-        "If you Want to Enter to the control menu? Enter 1.").strip())
+        "If you Want to Enter to the control menu? Enter 1.\nyour answer is:").strip())
     if change_settings != '' and int(change_settings) == 1:
         await db_actions.script_handler(client)
 
