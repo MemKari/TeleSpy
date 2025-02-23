@@ -31,6 +31,10 @@ async def add_chat_to_db(tg_chats: list, client) -> None:
 async def delete_chats():
     async with get_async_session() as session:
         tracked_chats = await get_tracked_chats()
+        if not tracked_chats:
+            print("Right now, you are not monitoring any chats and cannot delete them.")
+            return
+
         print('; '.join(tracked_chats))
         chat_names_to_delete = input(
             "Copy the names of the chats you want to delete and paste them separated by semicolon(;): ").split(';')
