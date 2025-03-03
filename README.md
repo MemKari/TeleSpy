@@ -1,9 +1,4 @@
+How to create an exe:
 ```
-docker compose build
-```
-
-
-#for getting tg code
-```
-docker run -it -v ${PWD}/data:/app/data telespy_psql python -m src.main
+pyinstaller --paths . --hidden-import aiosqlite --onefile src/main.py
 ```

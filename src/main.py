@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from pathlib import Path
+import sys
 
 import colorama
 from colorama import Back, Style
@@ -8,8 +9,7 @@ from telethon import TelegramClient, events
 from telethon.errors import PhoneNumberInvalidError, SessionPasswordNeededError
 from telethon.tl.types import Channel, Chat
 
-from src.config import api_id, api_hash, phone
-from src.search_settings import result_channel_ID, keywords
+from src.config import api_id, api_hash, phone, keywords, result_channel_ID
 from src.database import models, db_actions
 
 logging.basicConfig(format='[%(levelname) %(asctime)s] %(name)s: %(message)s',
@@ -17,8 +17,13 @@ logging.basicConfig(format='[%(levelname) %(asctime)s] %(name)s: %(message)s',
 
 
 async def create_tg_client():
-    session_path = Path(__file__).parent.parent / "data" / "tg_session"
-    print(session_path)
+    print(Path(sys.executable).parent)
+
+    if getattr(sys, 'frozen', False):
+        session_path = Path(sys.executable).parent / "tg_session"
+    else:
+        session_path = Path(__file__).parent.parent / "tg_session"
+
     client = TelegramClient(session_path, api_id, api_hash)
     try:
         await client.connect()
