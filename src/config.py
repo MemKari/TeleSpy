@@ -1,4 +1,3 @@
-import json
 import os
 
 from dotenv import load_dotenv
@@ -12,5 +11,3 @@ phone = os.environ.get('phone')
 keywords = os.environ.get('keywords')
 result_channel_ID = int(os.environ.get('result_channel_ID', 123))
 
-# print(f"Keywords: {keywords}")
-# print(keywords.split(','))
