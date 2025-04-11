@@ -24,24 +24,25 @@ async def create_tg_client():
     else:
         session_path = Path(__file__).parent.parent / "tg_session"
 
-    client = TelegramClient(session_path, api_id, api_hash)
+    client = TelegramClient(session_path, api_id, api_hash, system_version="4.16.30-vxCUSTOM")
+    #The client's telegram version is specified to bypass the session interruption. It may be the reason for the ban.
     try:
         await client.connect()
         if not await client.is_user_authorized():
             await client.send_code_request(phone)
-            code = input(Back.MAGENTA + 'Enter the code you received: ' + Style.RESET_ALL)
+            code = input(Back.RED + 'Enter the code you received: ' + Style.RESET_ALL)
             await client.sign_in(phone, code)
     except PhoneNumberInvalidError:
         logging.info('Invalid phone number.')
     except SessionPasswordNeededError:
-        password = input(Back.MAGENTA + 'Enter your 2FA password: ' + Style.RESET_ALL)
+        password = input(Back.RED + 'Enter your 2FA password: ' + Style.RESET_ALL)
         await client.sign_in(password=password)
 
     return client
 
 
-async def send_tg_notification(client, chat_title, message):
-    await client.send_message(result_channel_ID, f'New keyword mention: \n {chat_title}{message}')
+async def send_tg_notification(client, chat_title, message, author):
+    await client.send_message(result_channel_ID, f'New keyword mention: \n {chat_title} \n Author: @{author}\n{message}')
 
 
 async def main():
@@ -64,10 +65,11 @@ async def main():
 
         @client.on(events.NewMessage(chats=monitored_chats_id, incoming=True))
         async def f(event):
-            if any(word in event.message.message for word in keywords):
+            if any(word in event.message.message for word in keywords.split(',')):
                 chat = await event.get_chat()
+                author = await event.get_sender()
                 if isinstance(chat, Channel) or isinstance(chat, Chat):
-                    await send_tg_notification(client, chat.title, event.message.message)
+                    await send_tg_notification(client, chat.title, event.message.message, author.username)
 
         colorama.init()
         print(Back.YELLOW + "The bot is running and listening to messages in chats:" + Style.RESET_ALL)
